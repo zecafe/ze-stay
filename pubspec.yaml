@@ -1,7 +1,7 @@
 name: ze_stay
 description: Zé Stay - hospitalidade inteligente
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -10,11 +10,24 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/pousada_logo.jpg
+    - assets/wifi_qr.png
+    - assets/zecapao_icon.jpg
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/pousada_logo.jpg
+  adaptive_icon_background: '#F7F1E3'
+  adaptive_icon_foreground: assets/pousada_logo.jpg
