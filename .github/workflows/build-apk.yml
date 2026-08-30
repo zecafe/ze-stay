@@ -23,6 +23,8 @@ jobs:
           cache: true
       - name: Create Android platform
         run: flutter create --platforms=android --org com.zestay --project-name ze_stay .
+      - name: Remove generated template test
+        run: rm -f test/widget_test.dart
       - name: Dependencies
         run: flutter pub get
       - name: Analyze
