@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() => runApp(const ZeStayApp());
 
@@ -307,10 +308,57 @@ class GastronomyPage extends StatelessWidget {
       child: ListView(padding: const EdgeInsets.all(20), children: [
         const Text('Sabores que fazem parte da estadia', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: green)),
         const SizedBox(height: 16),
-        ...places.map((p) => Card(child: ListTile(leading: const Icon(Icons.restaurant_menu, color: green), title: Text(p[0], style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(p[1]), trailing: const Icon(Icons.chevron_right)))),
+        ...places.map((p) => Card(
+              child: ListTile(
+                leading: const Icon(Icons.restaurant_menu, color: green),
+                title: Text(p[0], style: const TextStyle(fontWeight: FontWeight.w700)),
+                subtitle: Text(p[1]),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: p[0] == 'Zecafé'
+                    ? () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const ZecafeExperiencePage()))
+                    : null,
+              ),
+            )),
       ]),
     );
   }
+}
+
+class ZecafeExperiencePage extends StatefulWidget {
+  const ZecafeExperiencePage({super.key});
+
+  @override
+  State<ZecafeExperiencePage> createState() => _ZecafeExperiencePageState();
+}
+
+class _ZecafeExperiencePageState extends State<ZecafeExperiencePage> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onNavigationRequest: (request) async {
+            final uri = Uri.tryParse(request.url);
+            if (uri != null && (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadFlutterAsset('assets/zecafe_experience.html');
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('Zecafé Experience')),
+        body: WebViewWidget(controller: _controller),
+      );
 }
 
 class ValePage extends StatelessWidget {
